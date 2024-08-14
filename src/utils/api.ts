@@ -94,3 +94,31 @@ export interface Category {
 	strCategoryThumb: string
 	strCategoryDescription: string
 }
+
+export const getIngredients = (meal: Meal) => {
+	const ingredients: { name: string; measurement: null | string }[] = []
+
+	for (const [key, value] of Object.entries(meal)) {
+		if (!key.startsWith("strIngredient")) continue
+
+		if (!value) continue
+
+		const keyIndex = extractNumber(key)
+
+		if (keyIndex === null) continue
+
+		const index = keyIndex - 1
+
+		// @ts-expect-error
+		const measurement = meal[`strMeasure${keyIndex + 1}`]
+
+		ingredients[index] = { name: value, measurement }
+	}
+
+	return ingredients
+}
+
+function extractNumber(str: string) {
+	const match = str.match(/\d+/)
+	return match ? Number.parseInt(match[0]) : null
+}
