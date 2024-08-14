@@ -1,6 +1,10 @@
 const API_URL = "https://www.themealdb.com/api/json/v1/1"
 
+const ARTIFICIAL_DELAY = 3000
+
 export const getRecipeById = async (id: string) => {
+	await artificalDelay(ARTIFICIAL_DELAY)
+
 	const response = await fetch(`${API_URL}/lookup.php?i=${id}`)
 	const data = (await response.json()) as { meals: Meal[] }
 
@@ -12,6 +16,8 @@ export const getRecipeById = async (id: string) => {
 }
 
 export const getRandomRecipe = async () => {
+	await artificalDelay(ARTIFICIAL_DELAY)
+
 	const response = await fetch(`${API_URL}/random.php`)
 	const data = (await response.json()) as { meals: Meal[] }
 
@@ -25,6 +31,8 @@ export const getRandomRecipe = async () => {
 }
 
 export const getCategories = async () => {
+	await artificalDelay(ARTIFICIAL_DELAY)
+
 	const response = await fetch(`${API_URL}/categories.php`)
 
 	const data = (await response.json()) as { categories: Category[] }
@@ -121,4 +129,8 @@ export const getIngredients = (meal: Meal) => {
 function extractNumber(str: string) {
 	const match = str.match(/\d+/)
 	return match ? Number.parseInt(match[0]) : null
+}
+
+function artificalDelay(ms: number) {
+	return new Promise((resolve) => setTimeout(resolve, ms))
 }
