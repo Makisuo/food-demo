@@ -1,3 +1,8 @@
+import { cache } from "react"
+
+import { deepStrictEqual } from "assert"
+import { unstable_cache } from "next/cache"
+
 const API_URL = "https://www.themealdb.com/api/json/v1/1"
 
 const ARTIFICIAL_DELAY = 3000
@@ -5,7 +10,7 @@ const ARTIFICIAL_DELAY = 3000
 export const getRecipeById = async (id: string) => {
 	await artificalDelay(ARTIFICIAL_DELAY)
 
-	const response = await fetch(`${API_URL}/lookup.php?i=${id}`)
+	const response = await fetch(`${API_URL}/lookup.php?i=${id}`, {})
 	const data = (await response.json()) as { meals: Meal[] }
 
 	const meal = data.meals[0]
@@ -18,7 +23,11 @@ export const getRecipeById = async (id: string) => {
 export const getRandomRecipe = async () => {
 	await artificalDelay(ARTIFICIAL_DELAY)
 
-	const response = await fetch(`${API_URL}/random.php`)
+	const response = await fetch(`${API_URL}/random.php`, {
+		next: {
+			tags: ["random-recipe"],
+		},
+	})
 	const data = (await response.json()) as { meals: Meal[] }
 
 	const meal = data.meals[0]
@@ -31,7 +40,7 @@ export const getRandomRecipe = async () => {
 }
 
 export const getCategories = async () => {
-	await artificalDelay(ARTIFICIAL_DELAY)
+	await artificalDelay(ARTIFICIAL_DELAY + 3000)
 
 	const response = await fetch(`${API_URL}/categories.php`)
 
